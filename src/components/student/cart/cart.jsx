@@ -49,7 +49,7 @@ const Cart = () => {
   const handleZakaz = () => {
     if (cartItems.length === 0) return;
 
-    const orderId = Math.floor(1000000 + Math.random() * 9000000); // 7 xonali ID
+    const orderId = Math.floor(1000000 + Math.random() * 9000000);
     const order = {
       id: orderId,
       items: cartItems,

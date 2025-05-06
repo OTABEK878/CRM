@@ -42,7 +42,7 @@ const Products = ({ products, setProducts, deleteProduct }) => {
 
     const updatedProducts = [...products, newItem];
     setProducts(updatedProducts);
-    localStorage.setItem('products', JSON.stringify(updatedProducts)); // Saqlash
+    localStorage.setItem('products', JSON.stringify(updatedProducts));
     closeModal();
   };
 
