@@ -34,7 +34,7 @@ const Home = () => {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event("storage")); // triggers navbar update
+    window.dispatchEvent(new Event("storage"));
     alert(`${product.name} savatchaga qo'shildi`);
   };
 

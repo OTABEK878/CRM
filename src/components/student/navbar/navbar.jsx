@@ -15,7 +15,7 @@ const Navbar = ({ setIsAuthenticated }) => {
       setCartCount(total);
     };
     updateCartCount();
-    window.addEventListener('storage', updateCartCount); // listens to cart changes
+    window.addEventListener('storage', updateCartCount);
 
     return () => window.removeEventListener('storage', updateCartCount);
   }, [location]);

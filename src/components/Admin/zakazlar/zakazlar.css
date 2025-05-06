@@ -1,0 +1,23 @@
+.zakazlar-container {
+  padding: 20px;
+}
+
+.zakaz-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+.zakaz-card table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+.zakaz-card th, .zakaz-card td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

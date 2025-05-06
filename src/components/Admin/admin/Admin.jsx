@@ -3,42 +3,33 @@ import { FaUserCircle } from 'react-icons/fa';
 import Home from '../home/home';
 import Products from '../products/products';
 import MyProfile from '../myprofile/myprofile';
+import Zakazlar from '../zakazlar/zakazlar';
 import './Admin.css';
 
 const Admin = ({ setIsAuthenticated }) => {
   const [activeTab, setActiveTab] = useState('Home');
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const savedProducts = localStorage.getItem('products');
+    setProducts(savedProducts ? JSON.parse(savedProducts) : []);
+  }, []);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
   };
-
-  const defaultProducts = [
-    { id: 1, name: 'Telefon', price: 1200000, quantity: 10 },
-    { id: 2, name: 'Noutbuk', price: 5000000, quantity: 5 },
-    { id: 3, name: 'Planshet', price: 2500000, quantity: 15 },
-  ];
-
-  const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('products');
-    return saved ? JSON.parse(saved) : defaultProducts;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('products', JSON.stringify(products));
-  }, [products]);
 
   const sortProducts = (key, direction) => {
     const sorted = [...products].sort((a, b) =>
       direction === 'asc' ? a[key] - b[key] : b[key] - a[key]
     );
     setProducts(sorted);
-    setSortConfig({ key, direction });
   };
 
   const deleteProduct = (id) => {
     const filtered = products.filter((p) => p.id !== id);
     setProducts(filtered);
+    localStorage.setItem('products', JSON.stringify(filtered));
   };
 
   return (
@@ -54,6 +45,7 @@ const Admin = ({ setIsAuthenticated }) => {
         <aside className="sidebar">
           <button onClick={() => setActiveTab('Home')}>Home</button>
           <button onClick={() => setActiveTab('Products')}>Products</button>
+          <button onClick={() => setActiveTab('Zakazlar')}>Zakazlar</button>
           <div style={{ flexGrow: 1 }}></div>
           <button onClick={() => setActiveTab('MyProfile')}>My Profile</button>
         </aside>
@@ -67,6 +59,7 @@ const Admin = ({ setIsAuthenticated }) => {
               deleteProduct={deleteProduct}
             />
           )}
+          {activeTab === 'Zakazlar' && <Zakazlar />}
           {activeTab === 'MyProfile' && <MyProfile />}
         </section>
       </div>

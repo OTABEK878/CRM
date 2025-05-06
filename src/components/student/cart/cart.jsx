@@ -46,46 +46,75 @@ const Cart = () => {
   const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const handleZakaz = () => {
+    if (cartItems.length === 0) return;
+
+    const orderId = Math.floor(1000000 + Math.random() * 9000000); // 7 xonali ID
+    const order = {
+      id: orderId,
+      items: cartItems,
+      totalPrice,
+      createdAt: new Date().toLocaleString()
+    };
+
+    const existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(order);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
+    // Savatchani tozalash
+    updateCart([]);
+    alert(`Zakazingiz qabul qilindi! ID: ${orderId}`);
+  };
+
   return (
     <div className="cart-container">
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Tovar</th>
-            <th>Narxi</th>
-            <th>Soni</th>
-            <th>Jami</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cartItems.map((item, idx) => (
-            <tr key={item.id}>
-              <td>{idx + 1}</td>
-              <td>{item.name}</td>
-              <td>{item.price.toLocaleString()} so'm</td>
-              <td>
-                <div className="quantity-control">
-                  <button onClick={() => handleDecrease(item.id)}>-</button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => handleIncrease(item.id)}>+</button>
-                </div>
-              </td>
-              <td>{(item.price * item.quantity).toLocaleString()} so'm</td>
-              <td><button onClick={() => handleDelete(item.id)}>Delete</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h2>Savatcha</h2>
+      {cartItems.length === 0 ? (
+        <p>Savatcha bo‘sh.</p>
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Tovar</th>
+                <th>Narxi</th>
+                <th>Soni</th>
+                <th>Jami</th>
+                <th>Amal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item, idx) => (
+                <tr key={item.id}>
+                  <td>{idx + 1}</td>
+                  <td>{item.name}</td>
+                  <td>{item.price.toLocaleString()} so'm</td>
+                  <td>
+                    <div className="quantity-control">
+                      <button onClick={() => handleDecrease(item.id)}>-</button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => handleIncrease(item.id)}>+</button>
+                    </div>
+                  </td>
+                  <td>{(item.price * item.quantity).toLocaleString()} so'm</td>
+                  <td>
+                    <button onClick={() => handleDelete(item.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      <div className="cart-summary">
-        <div className="summary-left">
-          <p><b>Tovarlar:</b> {totalCount} ta</p>
-          <p><b>Umumiy:</b> {totalPrice.toLocaleString()} so'm</p>
-        </div>
-        <button className="zakaz-btn">Zakaz</button>
-      </div>
+          <div className="cart-summary">
+            <div className="summary-left">
+              <p><b>Tovarlar:</b> {totalCount} ta</p>
+              <p><b>Umumiy:</b> {totalPrice.toLocaleString()} so'm</p>
+            </div>
+            <button className="zakaz-btn" onClick={handleZakaz}>Zakaz</button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
