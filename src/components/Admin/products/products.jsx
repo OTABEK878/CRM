@@ -18,7 +18,6 @@ const Products = ({ products, setProducts, deleteProduct }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct({ ...newProduct, [name]: value });
-
     setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
@@ -40,7 +39,10 @@ const Products = ({ products, setProducts, deleteProduct }) => {
       price: Number(newProduct.price),
       quantity: Number(newProduct.quantity),
     };
-    setProducts([...products, newItem]);
+
+    const updatedProducts = [...products, newItem];
+    setProducts(updatedProducts);
+    localStorage.setItem('products', JSON.stringify(updatedProducts)); // Saqlash
     closeModal();
   };
 
@@ -58,6 +60,7 @@ const Products = ({ products, setProducts, deleteProduct }) => {
       product.id === currentProduct.id ? updatedProduct : product
     );
     setProducts(updatedProducts);
+    localStorage.setItem('products', JSON.stringify(updatedProducts)); // Saqlash
     closeModal();
   };
 
@@ -152,7 +155,11 @@ const Products = ({ products, setProducts, deleteProduct }) => {
               <td>{(product.price * product.quantity).toLocaleString()}</td>
               <td>
                 <button onClick={() => handleEdit(product)}>Edit</button>
-                <button onClick={() => deleteProduct(product.id)}>Delete</button>
+                <button onClick={() => {
+                  deleteProduct(product.id);
+                  const remaining = products.filter(p => p.id !== product.id);
+                  localStorage.setItem('products', JSON.stringify(remaining)); // delete uchun ham localStorage yangilash
+                }}>Delete</button>
               </td>
             </tr>
           ))}
@@ -160,56 +167,55 @@ const Products = ({ products, setProducts, deleteProduct }) => {
       </table>
 
       {isModalOpen && (
-  <div
-    className="modal-overlay"
-    onClick={(e) => {
-      if (e.target.classList.contains('modal-overlay')) {
-        closeModal();
-      }
-    }}
-  >
-    <div className="modal">
-      <FaTimes className="close-icon" onClick={closeModal} />
-      <h2 style={{ textAlign: 'center' }}>
-        {modalType === 'create' ? "Tovar Qo'shish" : "Tovarni Yangilash"}
-      </h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Tovar nomi"
-        value={newProduct.name}
-        onChange={handleInputChange}
-      />
-      {errors.name && <small className="error">{errors.name}</small>}
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+              closeModal();
+            }
+          }}
+        >
+          <div className="modal">
+            <FaTimes className="close-icon" onClick={closeModal} />
+            <h2 style={{ textAlign: 'center' }}>
+              {modalType === 'create' ? "Tovar Qo'shish" : "Tovarni Yangilash"}
+            </h2>
+            <input
+              type="text"
+              name="name"
+              placeholder="Tovar nomi"
+              value={newProduct.name}
+              onChange={handleInputChange}
+            />
+            {errors.name && <small className="error">{errors.name}</small>}
 
-      <input
-        type="number"
-        name="price"
-        placeholder="Narhi"
-        value={newProduct.price}
-        onChange={handleInputChange}
-      />
-      {errors.price && <small className="error">{errors.price}</small>}
+            <input
+              type="number"
+              name="price"
+              placeholder="Narhi"
+              value={newProduct.price}
+              onChange={handleInputChange}
+            />
+            {errors.price && <small className="error">{errors.price}</small>}
 
-      <input
-        type="number"
-        name="quantity"
-        placeholder="Soni"
-        value={newProduct.quantity}
-        onChange={handleInputChange}
-      />
-      {errors.quantity && <small className="error">{errors.quantity}</small>}
+            <input
+              type="number"
+              name="quantity"
+              placeholder="Soni"
+              value={newProduct.quantity}
+              onChange={handleInputChange}
+            />
+            {errors.quantity && <small className="error">{errors.quantity}</small>}
 
-      <div className="modal-buttons">
-        <button onClick={modalType === 'create' ? handleCreate : handleUpdate}>
-          {modalType === 'create' ? 'Create' : 'Update'}
-        </button>
-        <button onClick={handleClear}>Clear</button>
-      </div>
-    </div>
-  </div>
-)}
-
+            <div className="modal-buttons">
+              <button onClick={modalType === 'create' ? handleCreate : handleUpdate}>
+                {modalType === 'create' ? 'Create' : 'Update'}
+              </button>
+              <button onClick={handleClear}>Clear</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
